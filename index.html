@@ -1,18 +1,15 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<title>31 December – आख़िरी पन्ना</title>
+<title>31 दिसंबर – आख़िरी पन्ना</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;600&display=swap');
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin:0; padding:0; box-sizing:border-box; }
 
 body {
   height: 100vh;
@@ -25,11 +22,58 @@ body {
   justify-content: center;
   align-items: center;
   font-family: 'Noto Serif Devanagari', serif;
-  color: #f0f0f0;
+  color: #f2f2f2;
+  overflow: hidden;
 }
 
+/* 🔥 Candle */
+.candle {
+  position: fixed;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 80px;
+  background: #eee;
+  border-radius: 4px;
+}
+
+.flame {
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 28px;
+  background: radial-gradient(circle, #ffdd55, #ff8800, transparent);
+  border-radius: 50% 50% 50% 50%;
+  animation: flicker 0.15s infinite alternate;
+}
+
+@keyframes flicker {
+  from { transform: translateX(-50%) scale(1); opacity: 0.9; }
+  to   { transform: translateX(-50%) scale(1.1); opacity: 1; }
+}
+
+/* 🎆 Patakha Sparkles */
+.sparkle {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  animation: sparkle 2s linear infinite;
+}
+
+@keyframes sparkle {
+  from { transform: translateY(0); opacity: 1; }
+  to   { transform: translateY(-120px); opacity: 0; }
+}
+
+/* 📜 Poetry */
 .container {
-  max-width: 90%;
+  max-width: 700px;
+  width: 90%;
   text-align: center;
 }
 
@@ -37,25 +81,24 @@ body {
   opacity: 0;
   font-size: 1.4rem;
   margin: 14px 0;
-  animation: fadeIn 2s forwards;
+  animation: fadeIn 1.8s ease forwards;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-    filter: blur(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
+  from { opacity: 0; transform: translateY(14px); filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+.author {
+  margin-top: 30px;
+  font-size: 1.1rem;
+  opacity: 0.7;
+  font-style: italic;
 }
 
 .footer {
   position: fixed;
-  bottom: 20px;
+  bottom: 18px;
   width: 100%;
   text-align: center;
   font-size: 0.9rem;
@@ -66,16 +109,25 @@ body {
 
 <body>
 
+<!-- 🕯️ Candle -->
+<div class="candle">
+  <div class="flame"></div>
+</div>
+
+<!-- 📜 Text -->
 <div class="container" id="poem"></div>
 
 <div class="footer">
 🌙🤍 Happy New Year 2026 ✨
 </div>
 
-<audio id="voice" src="voice.mp3"></audio>
+<!-- 🎵 Online Music -->
+<audio autoplay loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4b9b5d6f60.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-// 📜 Poetry lines
+/* 📜 Poetry lines */
 const lines = [
   "31 दिसंबर – आख़िरी पन्ना",
   "कुछ रिश्ते लिखे नहीं जाते,",
@@ -98,34 +150,34 @@ const lines = [
   "खुले दिल से स्वागत।"
 ];
 
-// ⏱️ Voice sync timing (seconds)
-const timings = [
-  0, 3, 6, 9,
-  12, 16, 19, 22,
-  25, 28, 31, 34,
-  37, 40, 43, 46,
-  49, 52, 55
-];
-
 const poem = document.getElementById("poem");
-const audio = document.getElementById("voice");
-let index = 0;
 
-// 🎙️ Show line with voice
-audio.addEventListener("timeupdate", () => {
-  if (index < timings.length && audio.currentTime >= timings[index]) {
-    const div = document.createElement("div");
-    div.className = "line";
-    div.textContent = lines[index];
-    poem.appendChild(div);
-    index++;
-  }
+/* ✨ Line-by-line animation */
+lines.forEach((text, i) => {
+  const div = document.createElement("div");
+  div.className = "line";
+  div.textContent = text;
+  div.style.animationDelay = `${i * 1.2}s`;
+  poem.appendChild(div);
 });
 
-// ▶ Start on first tap (mobile safe)
-document.body.addEventListener("click", () => {
-  audio.play();
-}, { once: true });
+/* ✍️ Author */
+setTimeout(() => {
+  const author = document.createElement("div");
+  author.className = "author";
+  author.textContent = "— Sonu Roy";
+  poem.appendChild(author);
+}, lines.length * 1200);
+
+/* 🎆 Sparkles generator */
+setInterval(() => {
+  const s = document.createElement("div");
+  s.className = "sparkle";
+  s.style.left = Math.random() * window.innerWidth + "px";
+  s.style.bottom = "0px";
+  document.body.appendChild(s);
+  setTimeout(() => s.remove(), 2000);
+}, 300);
 </script>
 
 </body>
