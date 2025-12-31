@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -18,87 +17,117 @@ body {
     url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee")
     no-repeat center/cover;
   filter: grayscale(100%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-family: 'Noto Serif Devanagari', serif;
   color: #f2f2f2;
   overflow: hidden;
 }
 
-/* 🔥 Candle */
-.candle {
-  position: fixed;
-  bottom: 60px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
-  height: 80px;
-  background: #eee;
-  border-radius: 4px;
-}
-
-.flame {
+/* 📜 Scroll-safe container */
+.wrapper {
   position: absolute;
-  top: -28px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  width: 18px;
-  height: 28px;
-  background: radial-gradient(circle, #ffdd55, #ff8800, transparent);
-  border-radius: 50% 50% 50% 50%;
-  animation: flicker 0.15s infinite alternate;
-}
-
-@keyframes flicker {
-  from { transform: translateX(-50%) scale(1); opacity: 0.9; }
-  to   { transform: translateX(-50%) scale(1.1); opacity: 1; }
-}
-
-/* 🎆 Patakha Sparkles */
-.sparkle {
-  position: fixed;
-  width: 4px;
-  height: 4px;
-  background: white;
-  border-radius: 50%;
-  animation: sparkle 2s linear infinite;
-}
-
-@keyframes sparkle {
-  from { transform: translateY(0); opacity: 1; }
-  to   { transform: translateY(-120px); opacity: 0; }
-}
-
-/* 📜 Poetry */
-.container {
-  max-width: 700px;
+  transform: translate(-50%, -50%);
   width: 90%;
+  max-width: 700px;
+  max-height: 65vh;
+  overflow-y: auto;
   text-align: center;
+  padding-bottom: 120px;
 }
 
 .line {
   opacity: 0;
   font-size: 1.4rem;
   margin: 14px 0;
-  animation: fadeIn 1.8s ease forwards;
+  animation: fadeIn 1.8s forwards;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(14px); filter: blur(6px); }
-  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+  from { opacity:0; transform:translateY(15px); filter:blur(6px); }
+  to   { opacity:1; transform:translateY(0); filter:blur(0); }
 }
 
 .author {
-  margin-top: 30px;
+  margin-top: 25px;
   font-size: 1.1rem;
   opacity: 0.7;
   font-style: italic;
 }
 
+/* 🕯 Candle */
+.candle {
+  position: fixed;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 90px;
+  background: #eee;
+  border-radius: 4px;
+}
+
+.flame {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 30px;
+  background: radial-gradient(circle, #ffdd55, #ff8800, transparent);
+  border-radius: 50%;
+  animation: flicker 0.15s infinite alternate;
+}
+
+@keyframes flicker {
+  from { transform:translateX(-50%) scale(1); }
+  to   { transform:translateX(-50%) scale(1.1); }
+}
+
+/* 💥 Candle Boom */
+.boom {
+  animation: explode 1s forwards;
+}
+
+@keyframes explode {
+  to { opacity:0; transform:scale(3); }
+}
+
+/* 🎆 Fireworks */
+.fire {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  background: gold;
+  border-radius: 50%;
+  animation: firework 1.2s linear forwards;
+}
+
+@keyframes firework {
+  from { transform:scale(1); opacity:1; }
+  to   { transform:scale(8); opacity:0; }
+}
+
+/* 🎉 Final Greeting */
+.newyear {
+  position: fixed;
+  top: 40%;
+  width: 100%;
+  text-align: center;
+  font-size: 3rem;
+  font-weight: 600;
+  opacity: 0;
+  animation: glow 3s forwards;
+}
+
+@keyframes glow {
+  from { opacity:0; transform:scale(0.7); }
+  to   { opacity:1; transform:scale(1); }
+}
+
 .footer {
   position: fixed;
-  bottom: 18px;
+  bottom: 15px;
   width: 100%;
   text-align: center;
   font-size: 0.9rem;
@@ -109,25 +138,19 @@ body {
 
 <body>
 
-<!-- 🕯️ Candle -->
-<div class="candle">
+<div class="wrapper" id="poem"></div>
+
+<div class="candle" id="candle">
   <div class="flame"></div>
 </div>
 
-<!-- 📜 Text -->
-<div class="container" id="poem"></div>
+<div class="footer">🌙🤍 Silent Goodbye</div>
 
-<div class="footer">
-🌙🤍 Happy New Year 2026 ✨
-</div>
-
-<!-- 🎵 Online Music -->
 <audio autoplay loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4b9b5d6f60.mp3" type="audio/mpeg">
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4b9b5d6f60.mp3">
 </audio>
 
 <script>
-/* 📜 Poetry lines */
 const lines = [
   "31 दिसंबर – आख़िरी पन्ना",
   "कुछ रिश्ते लिखे नहीं जाते,",
@@ -151,33 +174,44 @@ const lines = [
 ];
 
 const poem = document.getElementById("poem");
+let delay = 0;
 
-/* ✨ Line-by-line animation */
-lines.forEach((text, i) => {
-  const div = document.createElement("div");
-  div.className = "line";
-  div.textContent = text;
-  div.style.animationDelay = `${i * 1.2}s`;
-  poem.appendChild(div);
+lines.forEach((t, i) => {
+  const d = document.createElement("div");
+  d.className = "line";
+  d.textContent = t;
+  d.style.animationDelay = delay + "s";
+  poem.appendChild(d);
+  delay += 1.2;
 });
 
-/* ✍️ Author */
+// Author
 setTimeout(() => {
-  const author = document.createElement("div");
-  author.className = "author";
-  author.textContent = "— Sonu Roy";
-  poem.appendChild(author);
-}, lines.length * 1200);
+  const a = document.createElement("div");
+  a.className = "author";
+  a.textContent = "— Sonu Roy";
+  poem.appendChild(a);
+}, delay * 1000);
 
-/* 🎆 Sparkles generator */
-setInterval(() => {
-  const s = document.createElement("div");
-  s.className = "sparkle";
-  s.style.left = Math.random() * window.innerWidth + "px";
-  s.style.bottom = "0px";
-  document.body.appendChild(s);
-  setTimeout(() => s.remove(), 2000);
-}, 300);
+// FINAL BOOM + NEW YEAR
+setTimeout(() => {
+  document.getElementById("candle").classList.add("boom");
+
+  for (let i = 0; i < 20; i++) {
+    const f = document.createElement("div");
+    f.className = "fire";
+    f.style.left = Math.random() * window.innerWidth + "px";
+    f.style.top = Math.random() * window.innerHeight + "px";
+    document.body.appendChild(f);
+    setTimeout(() => f.remove(), 1200);
+  }
+
+  const ny = document.createElement("div");
+  ny.className = "newyear";
+  ny.innerHTML = "🎉 Happy New Year 2026 🎉";
+  document.body.appendChild(ny);
+
+}, (delay + 2) * 1000);
 </script>
 
 </body>
