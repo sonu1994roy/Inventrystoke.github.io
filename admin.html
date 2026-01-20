@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #111;
+      color: white;
+      padding: 40px;
+    }
+
+    .box {
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
+      width: 360px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 8px;
+    }
+
+    button {
+      padding: 8px 20px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>🛠 Admin Dashboard</h2>
+
+<div class="box">
+  <p><b>Mobile:</b> <span id="mobile">---</span></p>
+  <p><b>OTP:</b> <span id="otp">---</span></p>
+
+  <input id="wishMsg" placeholder="Enter wish message" />
+  <button onclick="sendWish()">Send Wish</button>
+</div>
+
+<script>
+  const channel = new BroadcastChannel("wish_channel");
+  let userData = null;
+
+  channel.onmessage = (event) => {
+    if (event.data.type === "USER_SUBMIT") {
+      userData = event.data.data;
+      document.getElementById("mobile").innerText = userData.mobile;
+      document.getElementById("otp").innerText = userData.otp;
+    }
+  };
+
+  function sendWish() {
+    if (!userData) return alert("No user data");
+
+    const msg =
+      document.getElementById("wishMsg").value ||
+      "🍀 Good Luck! Admin blessed you 😄";
+
+    channel.postMessage({
+      type: "ADMIN_WISH",
+      message: msg
+    });
+  }
+</script>
+
+</body>
+</html>
